@@ -3,32 +3,32 @@
 #endif // PLANOS_H
 
 
-typedef struct mapa{
-    int colunas,linhas;
-    bloco **blocos;
-    vetor dimBloco;
-    tipoBloco *tipos;
-    int nTipos;
 
-}mapa;
+/* em construcao
+    tratamento de camera e cenario*/
+
+int CriaParedeInv(int larg,int alt){
+    PreparaOffScreenRenderer(alt,larg);
+    PintaFundoOffScreen(BRANCO);
+
+    return CriaObjetoOffScreen(0);
+}
 
 typedef struct plano {
     vetor ancora,dimensao;
-    float inclinacao;
     char *textura;
     PIG_Cor cor;
     plano *proximo;
 }plano;
 
-plano newPlano(vetor a, vetor dim, float inc=0){
+plano newPlano(vetor a, vetor dim){
     plano p;
-    plano.ancora = a;
-    plano.dimensao = dim;
-    plano.inclinacao = inc;
-    plano.textura = NULL;
-    plano.cor = PRETO;
-    plano.proximo = NULL;
-    return plano;
+    p.ancora = a;
+    p.dimensao = dim;
+    p.textura = NULL;
+    p.cor = PRETO;
+    p.proximo = NULL;
+    return p;
 }
 
 

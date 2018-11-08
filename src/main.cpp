@@ -1,23 +1,27 @@
-#include "PIG.h"
-#include "grid.h"
-#include "vetores.h"
-#include "fisicas.h"
-#include "planos.h"
 
-//defines
+int d=0;
 #define TICK 0.05
 #define JUMPPOWER 30
 #define IMPULSE 0.2
 
-mapa mapa1;
+#include "PIG.h"
+#include "fisicas.h"
+
+//defines
+
+
 PIG_Evento evento;
 PIG_Teclado meuTeclado;
 int tick;
 
 int main( int argc, char* args[] )
 {
-
     CriaJogo("Meu Jogo");
+
+    movel *balls;
+    balls = (movel *) malloc(sizeof(movel));
+    *balls = newMovel(CriaObjeto("../imagens/redball.png"),vetorRet(LARG_TELA/2,ALT_TELA/2),getRandomCircular(350),vetorRet(0,-200));
+    int fonte = CriaFonteNormal("../fontes/arial.ttf",32,BRANCO,0,PRETO);
     tick = CriaTimer();
     meuTeclado = GetTeclado();
     while(JogoRodando()){
@@ -26,10 +30,13 @@ int main( int argc, char* args[] )
             case  EVENTO_MOUSE:{
                 switch(evento.mouse.acao){
                     case MOUSE_PRESSIONADO:{
+                        movel *meh = (movel *) malloc(sizeof(movel));
+                        *meh = newMovel(CriaObjeto("../imagens/redball.png"),vetorRet(LARG_TELA/2,ALT_TELA/2),getRandomCircular(350),vetorRet(0,-350));
+                        addMovel(&balls, meh);
                     }break;
                     case MOUSE_LIBERADO:{
                     }break;
-            }}break;
+                }}break;
 
             case EVENTO_TECLADO:{
                 switch(evento.teclado.acao){
@@ -38,6 +45,7 @@ int main( int argc, char* args[] )
                             case TECLA_d: break;
                             case TECLA_a:  break;
                             case TECLA_BARRAESPACO: break;
+                            case TECLA_ESC: FechaJanela(0); break;
                         }
 
                     }break;
@@ -53,10 +61,13 @@ int main( int argc, char* args[] )
         }
 
         if(TempoDecorrido(tick)>=TICK){
+            doTick(balls);
             ReiniciaTimer(tick);
         }
         IniciaDesenho();
-
+            EscreverCentralizada("Click Click Click",LARG_TELA/2,20,fonte);
+            doInteracao(balls);
+            desenhaMovel(balls);
         EncerraDesenho();
 
     }

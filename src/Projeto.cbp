@@ -31,8 +31,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="../imagens/redball.png" />
 		<Unit filename="fisicas.h" />
-		<Unit filename="grid.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="planos.h" />
 		<Unit filename="vetores.h" />
