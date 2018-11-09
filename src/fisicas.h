@@ -5,8 +5,9 @@
 
 #include "vetores.h"
 #include "planos.h"
-#define ATRITO 0.8
+#define ATRITO 1
 #define GRAVIDADE 10
+#define DEADZONE 4
 
 
 vetor nulo = vetorPol(0,0);
@@ -46,30 +47,6 @@ void desenhaMovel(movel *m){
     desenhaMovel(m->n);
 }
 
-//movel checkPos(movel m){
-//    if (m.posicao.y<=0&&m.estado==AR){
-//        m.estado = CHAO;
-//        m.posicao = vetorRet(m.posicao.x,0);
-//        m.velocidade = vetorRet(m.velocidade.x,0); //sem colisao
-//        m.accel = vetorRet(m.accel.x,0);
-//    }
-//    return m;
-//}
-//
-//vetor checkAccel(vetor a){
-//    if (a.x>-2&&a.x<2) a.x = 0;
-//    if (a.x>=10) a.x=10;
-//    if (a.x<=-10) a.x=-10;
-//    return vetorRet(a.x,a.y);
-//}
-//
-//vetor checkVel(vetor a){
-//    if (a.x>-2&&a.x<2) a.x = 0;
-//    if (a.x>=20) a.x=20;
-//    if (a.x<=-20) a.x=-20;
-//    return vetorRet(a.x,a.y);
-//}
-
 
 /* atualiza todos os objetos moveis(afetados por tempo) para seu proximo estado
     escalavel com adicoes a struct movel
@@ -96,7 +73,7 @@ void undoTick(movel *m){
 
 vetor colisaoBorda(movel *m){
     vetor resultado = nulo;
-    int girth = 10;
+    int girth = 80;
     int lateral = CriaParedeInv(girth,ALT_TELA);
     int horizontal = CriaParedeInv(LARG_TELA,girth);
 
@@ -106,17 +83,17 @@ vetor colisaoBorda(movel *m){
     MoveObjeto(horizontal,0,-girth);
     DesenhaObjeto(lateral);
     DesenhaObjeto(horizontal);
-    if (TestaColisaoObjetos(lateral,m->obj))
+    if (TestaColisaoObjetos(lateral,m->obj)||m->posicao.x<0)
         resultado = resultado + vetorRet(-1,0);
-    if (TestaColisaoObjetos(horizontal,m->obj))
+    if (TestaColisaoObjetos(horizontal,m->obj)||m->posicao.y<0)
         resultado = resultado + vetorRet(0,-1);
 
     MoveObjeto(lateral,LARG_TELA,0);
     MoveObjeto(horizontal,0,ALT_TELA);
 
-    if (TestaColisaoObjetos(lateral,m->obj))
+    if (TestaColisaoObjetos(lateral,m->obj) || m->posicao.x > LARG_TELA)
         resultado = resultado + vetorRet(1,0);
-    if (TestaColisaoObjetos(horizontal,m->obj))
+    if (TestaColisaoObjetos(horizontal,m->obj) || m->posicao.y > ALT_TELA)
         resultado = resultado + vetorRet(0,1);
 
 
@@ -127,31 +104,55 @@ vetor colisaoBorda(movel *m){
 
 }
 void autoColisao(movel *m){
-    if (m== NULL) return;
+    if (m == NULL||m->n == NULL) return;
     movel *aux = m->n;
     while(aux){
         if (TestaColisaoObjetos(m->obj,aux->obj)) {
-            undoTick(m);
-            undoTick(aux);
             vetor axis = m->posicao - aux->posicao;
-            m->velocidade = getReflexo(m->velocidade,axis);
-            aux->velocidade = getReflexo(aux->velocidade,axis);
+            float media = (abs(m->velocidade.r)+abs(aux->velocidade.r) )/2;
+            d = abs(axis.r);
+            if (d <= 40){
+                undoTick(m);
+                undoTick(aux);
+                //m->velocidade = getReflexo(m->velocidade,axis);
+                m->velocidade = vetorPol(-media,axis.ang);
+                aux->velocidade = vetorPol(media,axis.ang);
+                if (d < 40 - DEADZONE && d!=0) {
+                    m->velocidade = m->velocidade * 2 * (20/d);
+                    aux->velocidade = aux->velocidade * (20/d);
+                }
+            }
         }
         aux = aux->n;
     }
+    autoColisao(m->n);
 }
 
 void doInteracao(movel *m){
-    vetor colB = colisaoBorda(m);
-
-    if (colB != nulo){
-        undoTick(m);
-        m->velocidade = getReflexo(m->velocidade,colB);
-    }
-
-    autoColisao(m);
     if (m->n==NULL) return;
     doInteracao(m->n);
+}
+
+void checkOOB(movel *m){
+    if (!m) return;
+    vetor borda = colisaoBorda(m);
+    if (borda.x <0) {
+        m->posicao = vetorRet(0,getMiddleY(m->posicao,m->posicao - m->velocidade,0));
+        m->velocidade = getReflexo(m->velocidade, vetorRet(1,0));
+    } else if (borda.x >0) {
+        m->posicao = vetorRet(LARG_TELA-40,getMiddleY(m->posicao,m->posicao - m->velocidade,LARG_TELA-40));
+        m->velocidade = getReflexo(m->velocidade, vetorRet(1,0));
+    }
+    if (borda.y <0){
+        m->posicao = vetorRet(getMiddleX(m->posicao,m->posicao - m->velocidade,0),0);
+        m->velocidade = getReflexo(m->velocidade, vetorRet(0,1));
+        m->velocidade = m->velocidade * 0.5;
+    } else if (borda.y >0){
+        m->posicao = vetorRet(getMiddleX(m->posicao,m->posicao - m->velocidade,ALT_TELA-40),ALT_TELA-40);
+        m->velocidade = getReflexo(m->velocidade, vetorRet(0,1));
+    }
+
+    checkOOB(m->n);
 }
 
 

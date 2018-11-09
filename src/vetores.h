@@ -120,6 +120,21 @@ vetor getRandomCone(vetor v,double deltaMax){ /*conta feia do krl, refazer ou re
     return vr;
 }
 
+int getMiddleX(vetor a,vetor b,int y){
+    vetor ab = a-b;
+    if (ab.y==0) ab.y=1;
+    float x = (a.y - y) * ab.x / ab.y;
+    return a.x+x;
+}
+
+int getMiddleY(vetor a,vetor b,int x){
+    vetor ab = a-b;
+    if (ab.x==0) ab.x=1;
+    float y = (a.x - x) * ab.y / ab.x;
+    return a.y+y;
+}
+
+
 /*
 retorna o vetor refletido numa superficie de normal dada
 */
