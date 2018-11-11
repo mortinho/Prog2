@@ -3,6 +3,7 @@ int d=0;
 #define TICK 0.05
 #define JUMPPOWER 30
 #define IMPULSE 0.2
+#define DEADZONE 4
 
 #include "PIG.h"
 #include "fisicas.h"

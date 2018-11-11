@@ -9,7 +9,6 @@
 #include "planos.h"
 #define ATRITO 1
 #define GRAVIDADE 10
-#define DEADZONE 4
 
 
 vetor nulo = vetorPol(0,0);
@@ -145,7 +144,6 @@ void colisaoBorda(movel *m){
                 updateMovel(&bBaixo);
                 while(TestaColisaoObjetos(bBaixo.obj,m->obj)){
                     m->posicao = m->posicao + vetorRet(0,1);
-                    printv("boing",m->posicao);
                     updateMovel(m);
                 }
         }
