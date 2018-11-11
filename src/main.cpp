@@ -20,7 +20,7 @@ int main( int argc, char* args[] )
 
     movel *balls;
     balls = (movel *) malloc(sizeof(movel));
-    *balls = newMovel(CriaObjeto("../imagens/redball.png"),vetorRet(LARG_TELA/2,0),vetorRet(200,50),vetorRet(0,-1000));
+    *balls = newMovel(CriaObjeto("../imagens/redball.png"),vetorRet(LARG_TELA/2,0),vetorRet(200,50),vetorRet(0,-100));
     int fonte = CriaFonteNormal("../fontes/arial.ttf",32,BRANCO,0,PRETO);
     tick = CriaTimer();
     meuTeclado = GetTeclado();
@@ -31,7 +31,7 @@ int main( int argc, char* args[] )
                 switch(evento.mouse.acao){
                     case MOUSE_PRESSIONADO:{
                         movel *meh = (movel *) malloc(sizeof(movel));
-                        *meh = newMovel(CriaObjeto("../imagens/redball.png"),vetorRet(LARG_TELA/2,ALT_TELA/2),getRandomCircular(350),vetorRet(0,-350));
+                        *meh = newMovel(CriaObjeto("../imagens/redball.png"),vetorRet(LARG_TELA/2,ALT_TELA/2),getRandomCircular(350),vetorRet(0,-3050));
                         addMovel(&balls, meh);
                     }break;
                     case MOUSE_LIBERADO:{
@@ -57,7 +57,7 @@ int main( int argc, char* args[] )
                     }break;
                      case TECLA_LIBERADA:{
                         switch(evento.teclado.tecla){
-                            case TECLA_d:break;
+                            case TECLA_d:printf("%i",0.6); break;
                             case TECLA_a:break;
                             case TECLA_BARRAESPACO:break;
                         }
@@ -68,12 +68,13 @@ int main( int argc, char* args[] )
 
         if(TempoDecorrido(tick)>=TICK){
             doTick(balls);
+            autoColisao(balls);
+            colisaoBorda(balls);
             ReiniciaTimer(tick);
         }
         IniciaDesenho();
             EscreverCentralizada("Click Click Click",LARG_TELA/2,20,fonte);
-            autoColisao(balls);
-            checkOOB(balls);
+            //autoColisao(balls);
             desenhaMovel(balls);
         EncerraDesenho();
 

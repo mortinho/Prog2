@@ -19,7 +19,7 @@ e utilizar os operadores + - *
 #include <math.h>
 
 typedef struct vetor{
-    int x,y;
+    double x,y;
     double r,ang;
 }vetor;
 
@@ -49,7 +49,21 @@ typedef struct vetor{
 
 /* inicializa um vetor pelas coordenadas retangulares (x,y)
     calcula o modulo e o angulo desse vetor*/
-vetor vetorRet(int x,int y){
+//vetor vetorRet(int x,int y){
+//    vetor v;
+//    double tn;
+//    v.x = x; v.y = y;
+//    v.r = sqrt(pow(x,2)+pow(y,2));
+//    if(v.r==0){
+//        v.ang=0;
+//        return v;
+//    }
+//    v.ang = acos(x*pow(v.r,-1));
+//    if(y<0) v.ang *= -1;
+//    return v;
+//}
+
+vetor vetorRet(double x,double y){
     vetor v;
     double tn;
     v.x = x; v.y = y;
@@ -138,12 +152,38 @@ int getMiddleY(vetor a,vetor b,int x){
 /*
 retorna o vetor refletido numa superficie de normal dada
 */
-vetor getReflexo(vetor v,vetor normal){
+vetor getProjecao(vetor v,vetor u){
+    return vetorPol(v.r*(cos(v.ang-u.ang)),u.ang);
+
+}
+
+void roundVetor(vetor *v){
+    if (v->r > -1 && v->r < 1 ){
+        *v = vetorPol(0,0);
+    } else if (v->x < 1 && v->x > -1){
+        *v = vetorRet(0,v->y);
+    } else if (v->y < 1 && v->y > -1) {
+        *v = vetorRet(v->x,0);
+    }
+}
+
+/*vetor getReflexo(vetor v,vetor normal){
+    vetor xlinha,ylinha;
+    xlinha = vetorRet(normal.y,-normal.x);
+    xlinha = getProjecao(v,xlinha);
+    ylinha = getProjecao(v,normal) * -1;
+
     float deltaTeta = v.ang - normal.ang;
     v = vetorPol(-v.r,v.ang - (2*deltaTeta));
     return v;
+}*/
+
+
+
+
+
+
+
+void printv(char *msg,vetor v){
+    printf("%s (%i,%i): %f|%f\n",msg,v.x,v.y,v.r,v.ang*180/M_PI);
 }
-
-
-
-
