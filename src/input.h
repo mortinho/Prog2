@@ -3,9 +3,11 @@
 #define INPUT_H
 #endif // INPUT_H
 
+/* lista de valores padrao de input */
 #define LEFT TECLA_a
 #define RIGHT TECLA_d
 #define JUMP TECLA_BARRAESPACO
+
 
 typedef struct input {
     int direita, esquerda, pulando;

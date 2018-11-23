@@ -37,8 +37,6 @@
 		<Unit filename="fisicas.h" />
 		<Unit filename="input.h">
 			<Option compilerVar="CC" />
-			<Option compile="1" />
-			<Option link="1" />
 		</Unit>
 		<Unit filename="main.cpp" />
 		<Unit filename="planos.h" />
