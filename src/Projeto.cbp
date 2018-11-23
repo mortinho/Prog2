@@ -31,8 +31,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="../README.md" />
+		<Unit filename="../fontes/arial.ttf" />
 		<Unit filename="../imagens/redball.png" />
 		<Unit filename="fisicas.h" />
+		<Unit filename="input.h">
+			<Option compilerVar="CC" />
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Unit filename="planos.h" />
 		<Unit filename="vetores.h" />

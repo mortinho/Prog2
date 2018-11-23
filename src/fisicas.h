@@ -8,7 +8,6 @@
 #include "vetores.h"
 #include "planos.h"
 #define ATRITO 1
-#define GRAVIDADE 10
 
 
 vetor nulo = vetorPol(0,0);
@@ -62,17 +61,33 @@ void desenhaMovel(movel *m){
     escalavel com adicoes a struct movel
 */
 void doTick(movel *m){
-    m->velocidade = m->velocidade + (m->accel*TICK);
-    m->posicao = m->posicao + (m->velocidade*TICK);
+
+    m->velocidade = m->velocidade + (m->accel * TICK);
+    m->posicao = m->posicao + (m->velocidade * TICK);
+    updateMovel(m);
+    if (m->n == NULL) return;
+    doTick(m->n);
+}
+
+void doTickPersonagem(movel *m,input *i){
+    if (i->pulando && m->posicao.y == CHAO && m->velocidade.y == 0){
+        m->velocidade = m->velocidade + vetorRet(0,JUMPPOWER);
+    }
+    m->velocidade = m->velocidade + ( (m->accel - vetorRet(0,i->pulando*GRAVIDADE)) * TICK);
+    m->posicao = m->posicao + (m->velocidade * TICK) + vetorRet(SPEED * (i->direita + i->esquerda),0 );
+    if (m->posicao.y<=CHAO && i->pulando){
+        m->posicao.y = CHAO;
+        i->pulando = 0;
+    }
     updateMovel(m);
     if (m->n == NULL) return;
     doTick(m->n);
 }
 
 void undoTick(movel *m){
-    m->velocidade = m->velocidade - (m->accel*TICK);
+    m->velocidade = m->velocidade - (m->accel * TICK);
 
-    m->posicao = m->posicao - (m->velocidade*TICK);
+    m->posicao = m->posicao - (m->velocidade * TICK);
 }
 
 /*

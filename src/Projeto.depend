@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1541910487 source:d:\progii\pig_v061_windows\src\main.cpp
+1542427631 source:d:\progii\pig_v061_windows\src\main.cpp
 	"PIG.h"
 	"fisicas.h"
 
@@ -448,9 +448,11 @@
 	<time.h>
 	<math.h>
 
-1541910487 d:\progii\pig_v061_windows\src\fisicas.h
+1542426733 d:\progii\pig_v061_windows\src\fisicas.h
 	"vetores.h"
 	"planos.h"
 
-1541709464 d:\progii\pig_v061_windows\src\planos.h
+1542428206 d:\progii\pig_v061_windows\src\planos.h
+
+1542479608 source:d:\progii\pig_v061_windows\src\input.h
 
